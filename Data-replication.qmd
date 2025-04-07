@@ -1,0 +1,123 @@
+---
+title: "data-replication"
+format: html
+editor: visual
+---
+
+Introduction
+
+This project replicates analyses from the paper: “Male size and reproductive performance in three species of livebearing fishes (Gambusia spp.): A systematic review and meta-analysis.” This meta-analysis examines how body size in male G. affanis, G. holbrooki, and G. sexradiata influences reproductive success. This paper collected data from multiple studies measuring courtship rate, number of offspring, and mating success. My report will replicate the statistical summary of the data, a visualization of effect sizes by species and trait, and a statistical test to compare the slope estimates across species.
+
+## Variable Dictionary
+
+| Variable     | Description                                                  |
+|------------------|------------------------------------------------------|
+| `Species`    | Gambusia species name (affinis, holbrooki, geiseri)          |
+| `ExpVar`     | Trait being measured (e.g., courtship rate, offspring count) |
+| `ES`         | Slope of the effect size (male size vs. trait)               |
+| `ESVar`      | Standard error of the slope                                  |
+| `T_N`        | Sample size                                                  |
+| `Tank_ratio` | Male-to-female sex ratio in the study population             |
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE, fig.path = "images/")
+library(tidyverse)
+
+```
+
+```{r}
+
+dat <- read_csv("data/dat.gam.csv")
+
+head(dat)
+
+```
+
+```{r}
+
+dat_clean <- dat %>%
+  select(Species, Trait = ExpVar, Slope = ES, SE = ESVar, N = T_N) %>%
+  filter(!is.na(Slope), !is.na(SE))
+
+head(dat_clean)
+dat_clean %>% group_by(Species) %>%
+  summarize(mean_slope = mean(Slope),
+            sd_slope = sd(Slope),
+            mean_SE = mean(SE),
+            n = n())
+
+```
+
+I summarize the cleaned data by species to compare average slope values.
+
+Next, I visualized the effect size (`Slope`) by trait and species, with error bars showing the standard error (`SE`).
+
+```{r}
+
+ggplot(dat_clean, aes(x = Trait, y = Slope, color = Species)) +
+  geom_point(position = position_jitter(width = 0.2), size = 3, alpha = 0.7) +
+  geom_errorbar(aes(ymin = Slope - SE, ymax = Slope + SE), width = 0.1) +
+  theme_minimal() +
+  labs(title = "Effect Size by Trait and Species",
+       x = "Trait",
+       y = "Effect Size (Slope)",
+       color = "Species") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+```{r}
+
+model <- lm(Slope ~ Species, data = dat_clean)
+summary(model)
+
+```
+
+Next, I used a linear model to assess whether effect size (`Slope`) differs significantly across species.
+
+## Replication of Figure 2 from the Original Paper
+
+The figure below replicates Figure 2, which shows the relationship between male-to-female ratio and effect size, with point sizes reflecting precision.
+
+```{r}
+dat_fig2 <- dat %>%
+  select(Slope = ES, SE = ESVar, Ratio = Tank_ratio) %>%
+  filter(!is.na(Slope), !is.na(SE), !is.na(Ratio)) %>%
+  mutate(Precision = 1 / SE)
+
+ggplot(dat_fig2, aes(x = Ratio, y = Slope)) +
+  geom_point(aes(size = Precision), alpha = 0.6, color = "steelblue") +
+  geom_smooth(method = "lm", color = "black", fill = "lightgray") +
+  theme_minimal() +
+  labs(title = "Effect Size vs. Male-to-Female Ratio",
+       x = "Male-to-Female Ratio",
+       y = "Effect Size (Slope)",
+       size = "Precision (1/SE)")
+```
+
+```         
+```
+
+## Original Figure for Comparison
+
+```{r}
+
+#| out-width: "70%"
+knitr::include_graphics("images/figure2.jpg")
+
+
+```
+
+## Discussion and Reflection
+
+The replication of Figure 2 captured the same key patterns described in the original paper: as the male-to-female sex ratio increases, the effect size tends to increase. This suggests male body size becomes a more important predictor of reproductive success when males are more abundant.
+
+There were some differences in the appearance of the figure due to plotting style, axis scaling, and possible data cleaning choices. However, the model and visual trend line matched the direction and statistical pattern described by the researchers.
+
+### Challenges Encountered:
+
+-   Trait labels were messy and hard to display clearly
+-   Some standard error values were very small or missing
+-   It wasn't always clear how original authors filtered or grouped data
+
+Overall, this replication reproduces the essential trends and structure of the original analysis.
