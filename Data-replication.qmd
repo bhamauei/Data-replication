@@ -48,9 +48,9 @@ dat_clean %>% group_by(Species) %>%
 
 ```
 
-I summarize the cleaned data by species to compare average slope values.
+I summarized the cleaned data by species to compare average slope values.
 
-Next, I visualized the effect size (`Slope`) by trait and species, with error bars showing the standard error (`SE`).
+Next, I visualized the effect size by trait and species, with error bars showing the standard error.
 
 ```{r}
 
@@ -108,7 +108,7 @@ knitr::include_graphics("images/figure2.jpg")
 
 ```
 
-## Discussion and Reflection
+## Discussion
 
 The replication of Figure 2 captured the same key patterns described in the original paper: as the male-to-female sex ratio increases, the effect size tends to increase. This suggests male body size becomes a more important predictor of reproductive success when males are more abundant.
 

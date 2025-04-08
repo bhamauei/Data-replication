@@ -224,8 +224,8 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 3 holbrooki     0.0990    0.406  0.0699   314</code></pre>
 </div>
 </div>
-<p>I summarize the cleaned data by species to compare average slope values.</p>
-<p>Next, I visualized the effect size (<code>Slope</code>) by trait and species, with error bars showing the standard error (<code>SE</code>).</p>
+<p>I summarized the cleaned data by species to compare average slope values.</p>
+<p>Next, I visualized the effect size by trait and species, with error bars showing the standard error.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat_clean, <span class="fu">aes</span>(<span class="at">x =</span> Trait, <span class="at">y =</span> Slope, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
@@ -315,8 +315,8 @@ F-statistic: 2.317 on 2 and 345 DF,  p-value: 0.1001</code></pre>
 </div>
 </div>
 </section>
-<section id="discussion-and-reflection" class="level2">
-<h2 class="anchored" data-anchor-id="discussion-and-reflection">Discussion and Reflection</h2>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
 <p>The replication of Figure 2 captured the same key patterns described in the original paper: as the male-to-female sex ratio increases, the effect size tends to increase. This suggests male body size becomes a more important predictor of reproductive success when males are more abundant.</p>
 <p>There were some differences in the appearance of the figure due to plotting style, axis scaling, and possible data cleaning choices. However, the model and visual trend line matched the direction and statistical pattern described by the researchers.</p>
 <section id="challenges-encountered" class="level3">
